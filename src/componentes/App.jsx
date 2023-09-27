@@ -1,11 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Pokemon } from './Pokemon'
 import Buscador from './Buscador';
 
-const App = () => {
+const App =  () => {
+    const obtenerPokemons = async () =>{
+        const respuesta  = await fetch('https://pokeapi.co/api/v2/pokemon');
+        const {results} = await respuesta.json();
+        // console.log(results)
+        return results;
+    }
+
+    const [pokemons , usePokemons] = useState([]);
+    obtenerPokemons().then( (pokemons) => {
+        console.log(pokemons)
+    });
+    
+
+
+
   return (
     <>
     <header>
@@ -30,11 +45,8 @@ const App = () => {
                 <Col xs={3}>
                     <Pokemon/>
                 </Col>
-
             </Row>
-        
        </Container>
-      
     </>
   )
 }
