@@ -20,7 +20,7 @@ const App =  () => {
       })
       const resultado = await Promise.all(resp);
       console.log(resultado);
-      usePokemons(resp);
+      usePokemons(resultado);
       useCargando(false);
 
     }
@@ -42,14 +42,13 @@ const App =  () => {
     </Container>
     {cargando ? "Cargando": (
        <Container fluid="md">
-        {JSON.stringify(pokemons)};
+
             <Row>
-                {pokemons.map((pokemon)=>{
-                    <Col xs={3} key={pokemon.order}>
+                {pokemons.map(pokemon=>(
+                     <Col xs={3} key={pokemon.order}>
                         <Pokemon {...pokemon}/>
-                        hola
                     </Col>
-                })}
+                ))}
             </Row>
        </Container>
     )}
