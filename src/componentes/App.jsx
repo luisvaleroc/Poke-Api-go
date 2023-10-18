@@ -7,6 +7,7 @@ import Buscador from './Buscador';
 
 const App =  () => {
     const [pokemons , usePokemons] = useState([]);
+    const [cargando , useCargando] = useState(true);
 
     const obtenerPokemons = async () =>{
         const respuesta  = await fetch('https://pokeapi.co/api/v2/pokemon');
@@ -19,34 +20,39 @@ const App =  () => {
       })
       const resultado = await Promise.all(resp);
       console.log(resultado);
-      usePokemons(resultado);
+      usePokemons(resp);
+      useCargando(false);
+
     }
  useEffect(() => {
     
     obtenerPokemons()
   }, []);
-   
-    
-
-
 
   return (
     <>
     <header>
         <h1>Poke Api</h1>
     </header>
+    
     <Container>
         <Row>
             <Buscador />
         </Row>
     </Container>
+    {cargando ? "Cargando": (
        <Container fluid="md">
+        {JSON.stringify(pokemons)};
             <Row>
-                <Col xs={3}>
-                    <Pokemon pokemon={pokemons[0]}/>
-                </Col>
+                {pokemons.map((pokemon)=>{
+                    <Col xs={3} key={pokemon.order}>
+                        <Pokemon {...pokemon}/>
+                        hola
+                    </Col>
+                })}
             </Row>
        </Container>
+    )}
     </>
   )
 }
