@@ -4,10 +4,12 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Pokemon } from './Pokemon'
 import Buscador from './Buscador';
+import { SideBar } from './SideBar';
 
 const App =  () => {
     const [pokemons , usePokemons] = useState([]);
     const [cargando , useCargando] = useState(true);
+    const [tipos , useTipos] = useState([]);
 
     const obtenerPokemons = async () =>{
         const respuesta  = await fetch('https://pokeapi.co/api/v2/pokemon');
@@ -19,15 +21,26 @@ const App =  () => {
         return dato;
       })
       const resultado = await Promise.all(resp);
-      console.log(resultado);
+      // console.log(resultado);
       usePokemons(resultado);
       useCargando(false);
 
     }
- useEffect(() => {
-    
-    obtenerPokemons()
-  }, []);
+
+    const obtenerTipos = async () => {
+        const respuesta = await fetch('https://pokeapi.co/api/v2/type/');
+        const {results}  = await respuesta.json();
+        useTipos(results);
+        // console.log(results);
+    }
+    useEffect(() => {
+      obtenerPokemons()
+      obtenerTipos()
+    }, []);
+
+    useEffect( () => {
+      console.log(tipos)
+    },[tipos]);
 
   return (
     <>
@@ -41,15 +54,21 @@ const App =  () => {
         </Row>
     </Container>
     {cargando ? "Cargando": (
-       <Container fluid="md">
-
-            <Row>
+       <Container fluid>
+        <Row>
+            <Col md={2}>
+              <SideBar/>
+            </Col>
+            <Col md={10}>
+              <Row>
                 {pokemons.map(pokemon=>(
                      <Col xs={3} key={pokemon.order}>
                         <Pokemon {...pokemon}/>
                     </Col>
                 ))}
-            </Row>
+              </Row>
+            </Col>
+        </Row>
        </Container>
     )}
     </>
